@@ -14,13 +14,26 @@ ENTRY = (
     "If it's my inbox, let it burn."
 )
 
+# The competition gate accepts a single line of 1-160 characters;
+# fail loudly here rather than emit an entry the grader would reject.
+MIN_CHARS = 1
+MAX_CHARS = 160
+
+
+def build_entry() -> str:
+    if not (MIN_CHARS <= len(ENTRY) <= MAX_CHARS):
+        raise ValueError(f"entry is {len(ENTRY)} chars, outside 1-160 gate")
+    if "\n" in ENTRY:
+        raise ValueError("entry must be a single line")
+    return ENTRY
+
 
 def main() -> None:
     out_dir = "/output"
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8") as f:
-        f.write(ENTRY)
+        f.write(build_entry())
 
 
 if __name__ == "__main__":
